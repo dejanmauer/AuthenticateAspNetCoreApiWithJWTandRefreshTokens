@@ -1,6 +1,10 @@
-# CoreAPIBearerToken
+# ASP.NET Core 2.1 API Authentication with JWT tokens (bearer)
 
-Nothing is easy with .NET Core :) What use to be a feature selection in old days, now requires a quite some amount of work. This project here is a boilerplate I've created primary for myself - so the next time I won't need to read all of the internet under the search terms of "bearer authentication .NET Core 2.1", "JWT authentiction .NET Core API", "Use Identity Core 2.1 with JWT tokens" or even "Where the hell are hidden Identity views and controllers". :)
+Nothing is easy anymore with .NET Core :) 
+
+What used to be a feature selection in old days, now requires a quite some amount of configuration. 
+
+This project is a boilerplate I've created primary for myself - so the next time I will be able to quickly jump to work on API without reading all of the internet under the search terms of "bearer authentication .NET Core 2.1", "JWT authentiction .NET Core API", "Use Identity Core 2.1 with JWT tokens" or even "Where the hell are hidden Identity views and controllers".
 
 ## JWT (JSON Web Tokens)
 JWT (JSON web token) has become popular in web development. It is an open standard for transmiting data as a JSON object in a secure way. The data transmitting using JWT between parties are digitally signed so that it can be easily verified and trusted.
