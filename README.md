@@ -2,7 +2,7 @@
 
 Nothing is easy anymore with .NET Core :) 
 
-What used to be a feature selection in the old days, now requires a quite some amount of configuration. 
+What used to be a feature selection in the old days, now requires quite some configuration code. 
 
 This project is a boilerplate I've created primary for myself - so the next time I will be able to quickly jump to work on API without reading all of the internet under the search terms of "bearer authentication .NET Core 2.1", "JWT authentiction .NET Core API", "Use Identity Core 2.1 with JWT tokens" or even "Where the hell are hidden Identity views and controllers".
 
