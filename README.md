@@ -2,9 +2,51 @@
 
 Nothing is easy anymore with .NET Core :) 
 
-What used to be a feature selection in old days, now requires a quite some amount of configuration. 
+What used to be a feature selection in the old days, now requires a quite some amount of configuration. 
 
 This project is a boilerplate I've created primary for myself - so the next time I will be able to quickly jump to work on API without reading all of the internet under the search terms of "bearer authentication .NET Core 2.1", "JWT authentiction .NET Core API", "Use Identity Core 2.1 with JWT tokens" or even "Where the hell are hidden Identity views and controllers".
+
+# What is this project all about?
+The aim of this project is to secure Web API access, so only authorized users will be able to call API methods. We would like to use [Authorize] attribute in controller to protect resources from unauthorized users. Something like this:
+
+```csharp
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace testapi.Controllers
+{
+	[Route("api/[controller]/[action]")]
+	[ApiController]
+
+	public class ValuesController : ControllerBase
+	{
+		// GET api/values
+		[HttpGet]
+		public ActionResult<IEnumerable<string>> Get()
+		{
+			return new string[] { "value1", "value2" };
+		}
+
+		[Authorize]
+		[HttpGet]
+		public ActionResult<IEnumerable<string>> GetAuthenticated()
+		{
+			return new string[] { "value1", "value2", User.Identity.Name };
+		}
+	}
+}
+```
+
+In the controller above, anybody can call Get action and receive the results, while GetAuthenticated() action returns results only if the user is authenticated.
+
+And how to authenticate user?
+
+One of the most popular way to secure API endpoints it to use so called token authentication (also known as bearer authentication). Let's look at the workflow:
+
+- important: SSL (HTTPS) must be used when dealing with token authentication!
+- user sends credentials to token provider API (for example: www.mysite.com/api/token/login?username=dejan&password=Pa$$1234)
+- application checks if the user exists and the provided password is correct. In our case we depend on the AspNet Core Identity.
 
 ## JWT (JSON Web Tokens)
 JWT (JSON web token) has become popular in web development. It is an open standard for transmiting data as a JSON object in a secure way. The data transmitting using JWT between parties are digitally signed so that it can be easily verified and trusted.
