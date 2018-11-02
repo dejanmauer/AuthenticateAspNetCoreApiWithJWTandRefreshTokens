@@ -42,11 +42,18 @@ In the controller above, anybody can call Get action and receive the results, wh
 
 And how to authenticate user?
 
-One of the most popular way to secure API endpoints it to use so called token authentication (also known as bearer authentication). Let's look at the workflow:
+One of the most popular way to secure API endpoints is token authentication (also known as bearer authentication). Let's look at the workflow:
 
 - important: SSL (HTTPS) must be used when dealing with token authentication!
-- user sends credentials to token provider API (for example: www.mysite.com/api/token/login?username=dejan&password=Pa$$1234)
-- application checks if the user exists and the provided password is correct. In our case we depend on the AspNet Core Identity.
+- user sends credentials to token provider API - login method (for example: www.mysite.com/api/token/login?username=dejan&password=Pa$$1234)
+- application checks if the user exists and the provided password is correct. In our case we depend on the Asp.Net Core Identity with identity information stored on SQL Server.
+- if user is found and password is correct (which is done by comparing password hashes) than the JWT token gets created.
+- JWT token consists of user credentials. The data are digitally signed, so that receiver can always check for authenticy.
+- JWT token is send back to the user. This token must be sent in the header of every call to protected API actions.
+
+When the token is issued it has information about validity. User tokens are usually valid from several minutes to several days, depending on the application. Please be aware that anybody who might intercept the token can do nasty things and there is no easy way to revoke just one token! That is why shorter tokens are considered more secure.
+
+This brings us to the next question. If tokens with short validity are preferable, how to renew token after the expiriation? Ask user again to enter credentials? Not the best approach... One way to overcome the issue is to issue one time refresh token at the time user receives access token. This token is then used - combined with expired access token - to automatically issue new access token without asking user for their credentials.
 
 ## JWT (JSON Web Tokens)
 JWT (JSON web token) has become popular in web development. It is an open standard for transmiting data as a JSON object in a secure way. The data transmitting using JWT between parties are digitally signed so that it can be easily verified and trusted.
