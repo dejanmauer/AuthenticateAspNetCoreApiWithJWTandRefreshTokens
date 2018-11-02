@@ -55,6 +55,33 @@ When the token is issued it has information about validity. User tokens are usua
 
 This brings us to the next question. If tokens with short validity are preferable, how to renew token after the expiriation? Ask user again to enter credentials? Not the best approach... One way to overcome the issue is to issue one time refresh token at the time user receives access token. This token is then used - combined with expired access token - to automatically issue new access token without asking user for their credentials.
 
+# How to access API?
+First of all, you need to authenticate user and receive tokens (JWT access token and refresh token). This is done by calling /account/login action, with provided username (email) and password.
+
+```csharp
+var client = new RestClient("https://localhost:44321/account/login");
+var request = new RestRequest(Method.POST);
+request.AddHeader("cache-control", "no-cache");
+request.AddHeader("content-type", "application/x-www-form-urlencoded");
+request.AddParameter("application/x-www-form-urlencoded", "email=dejan.mauer%40gmail.com&password=MySecretPassword$$", ParameterType.RequestBody);
+IRestResponse response = client.Execute(request);
+```
+In return you will receive two tokens. You will probably store both locally and use JWT access token in the header of the request accessing protected resources (or actions or api endpoints). Consider this example:
+
+```csharp
+var client = new RestClient("https://localhost:44321/api/values/getauthenticated");
+var request = new RestRequest(Method.GET);
+request.AddHeader("cache-control", "no-cache");
+request.AddHeader("authorization", "bearer eyJhbGciOi ... rest of your token ... N-zJLDc20");
+IRestResponse response = client.Execute(request);
+```
+
+Specify token in header's 'authorization' field. Remember to put word 'bearer ' before the token!
+
+Since JWT access token has short validity, you might get response code 401 (Not Authorized) with status code of 'www-authenticate' set to 'Bearer error="invalid_token", error_description="The token is expired"'. This means you need to get new token, as the old one is expired.
+
+To do so, call /account/refresh action with two parameters. First one is expired JWT token and the second one is the refresh token. This action returns new token, as well as new refresh token (remember, refresh token is only valid once).
+
 ## JWT (JSON Web Tokens)
 JWT (JSON web token) has become popular in web development. It is an open standard for transmiting data as a JSON object in a secure way. The data transmitting using JWT between parties are digitally signed so that it can be easily verified and trusted.
 
